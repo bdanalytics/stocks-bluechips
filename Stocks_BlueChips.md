@@ -478,6 +478,20 @@ print(myplot_line(subset(entity_df, Symbol %in% c("KO", "PG")),
 ![](Stocks_BlueChips_files/figure-html/inspect_data_1-3.png) 
 
 ```r
+print(myplot_line(subset(entity_df, Date.my >= as.Date("1995-01-01") & 
+                                    Date.my <= as.Date("2005-12-31")), 
+                  "Date.my", "StockPrice", facet_row_colnames="Symbol") +
+    geom_vline(xintercept=as.numeric(as.Date("2000-03-01"))) +
+    geom_vline(xintercept=as.numeric(as.Date("1997-09-01"))) +
+    geom_vline(xintercept=as.numeric(as.Date("1997-11-30"))) +
+    geom_vline(xintercept=as.numeric(as.Date("2004-01-01"))) +
+    geom_vline(xintercept=as.numeric(as.Date("2005-12-31")))         
+        )
+```
+
+![](Stocks_BlueChips_files/figure-html/inspect_data_1-4.png) 
+
+```r
 # print(myplot_scatter(entity_df, "<col1_name>", "<col2_name>"))
 
 script_df <- rbind(script_df, 
