@@ -37,6 +37,7 @@ source("~/Dropbox/datascience/R/myplot.R")
 source("~/Dropbox/datascience/R/mypetrinet.R")
 # Gather all package requirements here
 suppressPackageStartupMessages(require(plyr))
+suppressPackageStartupMessages(require(reshape2))
 
 #require(sos); findFn("pinv", maxPages=2, sortby="MaxScore")
 
@@ -425,6 +426,58 @@ print(sort(tapply(entity_df$StockPrice, entity_df$Symbol_fctr, sd, na.rm=TRUE)))
 # print(myplot_histogram(entity_df, "<col1_name>"))
 # print(myplot_box(df=entity_df, ycol_names="<col1_name>"))
 # print(myplot_box(df=entity_df, ycol_names="<col1_name>", xcol_name="<col2_name>"))
+print(myplot_line(subset(entity_df, Symbol == "KO"), "Date.my", "StockPrice"))
+```
+
+![](Stocks_BlueChips_files/figure-html/inspect_data_1-1.png) 
+
+```r
+symbol_cast_entity_df <- dcast(entity_df, Date.my ~ Symbol, value.var="StockPrice")
+myprint_df(symbol_cast_entity_df)
+```
+
+```
+##      Date.my       BA       GE      IBM       KO        PG
+## 1 1970-01-01 27.85381 74.25333 360.3190 83.36810 111.87429
+## 2 1970-02-01 22.38105 69.97684 346.7237 81.59105 111.45368
+## 3 1970-03-01 23.10524 72.15857 327.3457 81.33810 108.45143
+## 4 1970-04-01 21.57136 74.25273 319.8527 76.80591 106.28864
+## 5 1970-05-01 18.93286 66.66524 270.3752 69.27857  73.33286
+## 6 1970-06-01 15.44318 67.59318 267.2050 72.01545  48.31864
+##        Date.my        BA        GE       IBM       KO        PG
+## 91  1977-07-01  57.31789  55.35842 266.63316 38.77211  80.73474
+## 173 1984-05-01  38.39500  53.98500 111.17909 56.00773  48.17818
+## 177 1984-09-01  54.39737  56.64684 124.35263 61.79263  55.44158
+## 327 1997-03-01 104.61650 103.64150 141.67750 59.97800 122.01650
+## 414 2004-06-01  48.84905  31.96000  89.42000 51.35048  88.95524
+## 430 2005-10-01  66.88952  33.83190  82.06333 42.32619  56.09190
+##        Date.my       BA       GE      IBM       KO       PG
+## 475 2009-07-01 41.48273 11.76182 109.4368 49.36045 54.04545
+## 476 2009-08-01 45.99429 14.02333 118.4310 49.15095 53.09810
+## 477 2009-09-01 51.36286 15.59190 119.0557 51.58857 55.76476
+## 478 2009-10-01 51.15909 15.79773 122.2395 54.09000 57.51818
+## 479 2009-11-01 50.69650 15.50800 125.2735 55.90800 61.29700
+## 480 2009-12-01 55.02864 15.75455 128.8964 57.79091 62.05273
+```
+
+```r
+# print(myplot_line(entity_df, "Date.my", tail(names(symbol_cast_entity_df), -1)))
+print(myplot_line(entity_df, "Date.my", "StockPrice", facet_row_colnames="Symbol"))
+```
+
+![](Stocks_BlueChips_files/figure-html/inspect_data_1-2.png) 
+
+```r
+print(myplot_line(subset(entity_df, Symbol %in% c("KO", "PG")), 
+                  "Date.my", "StockPrice", facet_row_colnames="Symbol") + 
+    geom_vline(xintercept=as.numeric(as.Date("2003-03-01"))) +
+    geom_vline(xintercept=as.numeric(as.Date("1983-01-01")))        
+        )
+```
+
+![](Stocks_BlueChips_files/figure-html/inspect_data_1-3.png) 
+
+```r
 # print(myplot_scatter(entity_df, "<col1_name>", "<col2_name>"))
 
 script_df <- rbind(script_df, 
@@ -509,13 +562,14 @@ We reject the null hypothesis i.e. we have evidence to conclude that am_fctr imp
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] plyr_1.8.1      doBy_4.5-13     survival_2.38-1 ggplot2_1.0.0  
+## [1] reshape2_1.4.1  plyr_1.8.1      doBy_4.5-13     survival_2.38-1
+## [5] ggplot2_1.0.0  
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] codetools_0.2-10 colorspace_1.2-5 digest_0.6.8     evaluate_0.5.5  
 ##  [5] formatR_1.0      grid_3.1.2       gtable_0.1.2     htmltools_0.2.6 
-##  [9] knitr_1.9        lattice_0.20-30  MASS_7.3-39      Matrix_1.1-5    
-## [13] munsell_0.4.2    proto_0.3-10     Rcpp_0.11.4      reshape2_1.4.1  
+##  [9] knitr_1.9        labeling_0.3     lattice_0.20-30  MASS_7.3-39     
+## [13] Matrix_1.1-5     munsell_0.4.2    proto_0.3-10     Rcpp_0.11.4     
 ## [17] rmarkdown_0.5.1  scales_0.2.4     splines_3.1.2    stringr_0.6.2   
 ## [21] tcltk_3.1.2      tools_3.1.2      yaml_2.1.13
 ```

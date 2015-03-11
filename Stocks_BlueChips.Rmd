@@ -56,6 +56,7 @@ source("~/Dropbox/datascience/R/myplot.R")
 source("~/Dropbox/datascience/R/mypetrinet.R")
 # Gather all package requirements here
 suppressPackageStartupMessages(require(plyr))
+suppressPackageStartupMessages(require(reshape2))
 
 #require(sos); findFn("pinv", maxPages=2, sortby="MaxScore")
 
@@ -177,6 +178,16 @@ print(sort(tapply(entity_df$StockPrice, entity_df$Symbol_fctr, sd, na.rm=TRUE)))
 # print(myplot_histogram(entity_df, "<col1_name>"))
 # print(myplot_box(df=entity_df, ycol_names="<col1_name>"))
 # print(myplot_box(df=entity_df, ycol_names="<col1_name>", xcol_name="<col2_name>"))
+print(myplot_line(subset(entity_df, Symbol == "KO"), "Date.my", "StockPrice"))
+symbol_cast_entity_df <- dcast(entity_df, Date.my ~ Symbol, value.var="StockPrice")
+myprint_df(symbol_cast_entity_df)
+# print(myplot_line(entity_df, "Date.my", tail(names(symbol_cast_entity_df), -1)))
+print(myplot_line(entity_df, "Date.my", "StockPrice", facet_row_colnames="Symbol"))
+print(myplot_line(subset(entity_df, Symbol %in% c("KO", "PG")), 
+                  "Date.my", "StockPrice", facet_row_colnames="Symbol") + 
+    geom_vline(xintercept=as.numeric(as.Date("2003-03-01"))) +
+    geom_vline(xintercept=as.numeric(as.Date("1983-01-01")))        
+        )
 # print(myplot_scatter(entity_df, "<col1_name>", "<col2_name>"))
 
 script_df <- rbind(script_df, 
