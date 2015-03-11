@@ -135,9 +135,9 @@ print(script_df)
 entity_df <- mutate(entity_df, 
     Symbol_fctr=as.factor(Symbol),
     
-    Date.my=as.Date(strptime(Date, "%m/%d/%y"))
+    Date.my=as.Date(strptime(Date, "%m/%d/%y")),
 #     Year=year(Date.my),
-#     Month=months(Date.my),
+    Month=months(Date.my),
 #     Weekday=weekdays(Date.my)
     
                     )
@@ -173,6 +173,26 @@ print(sort(tapply(entity_df$StockPrice, entity_df$Symbol_fctr, min, na.rm=TRUE))
 print(sort(tapply(entity_df$StockPrice, entity_df$Symbol_fctr, max, na.rm=TRUE)))
 print(sort(tapply(entity_df$StockPrice, entity_df$Symbol_fctr, median, na.rm=TRUE)))
 print(sort(tapply(entity_df$StockPrice, entity_df$Symbol_fctr, sd, na.rm=TRUE)))
+myprint_df(entity_IBM_df <- subset(entity_df, Symbol == "IBM"))
+#myprint_df(entity_IBM_df <- mutate(entity_IBM_df, Month=months(Date.my)))
+print(month_mean_entity_IBM_arr <- 
+          sort(tapply(entity_IBM_df$StockPrice, entity_IBM_df$Month, mean, na.rm=TRUE)))
+print(month_mean_entity_IBM_arr > mean(entity_IBM_df$StockPrice, na.rm=TRUE))
+
+myprint_df(entity_GE_df <- subset(entity_df, Symbol == "GE"))
+myprint_df(entity_KO_df <- subset(entity_df, Symbol == "KO"))
+print(month_mean_entity_GE_arr <- 
+          sort(tapply(entity_GE_df$StockPrice, entity_GE_df$Month, mean, na.rm=TRUE)))
+print(month_mean_entity_KO_arr <- 
+          sort(tapply(entity_KO_df$StockPrice, entity_KO_df$Month, mean, na.rm=TRUE)))
+
+myprint_df(entity_PG_df <- subset(entity_df, Symbol == "PG"))
+myprint_df(entity_BA_df <- subset(entity_df, Symbol == "BA"))
+for (sym in unique(entity_df$Symbol)) {
+    entity_sym_df <- subset(entity_df, Symbol == sym)
+    print(sprintf("sym=%s", sym))
+    print(tapply(entity_sym_df$StockPrice, entity_sym_df$Month, mean, na.rm=TRUE))
+}    
 
 # Other plots:
 # print(myplot_histogram(entity_df, "<col1_name>"))
