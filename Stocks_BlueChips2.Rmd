@@ -793,11 +793,20 @@ dsp_numeric_feats_dstrb(feats_vctr=setdiff(names(glb_allobs_df),
 # Other plots:
 # print(myplot_box(df=glb_trnobs_df, ycol_names="<col1_name>"))
 # print(myplot_box(df=glb_trnobs_df, ycol_names="<col1_name>", xcol_name="<col2_name>"))
-# print(myplot_line(subset(glb_trnobs_df, Symbol %in% c("KO", "PG")), 
-#                   "Date.my", "StockPrice", facet_row_colnames="Symbol") + 
-#     geom_vline(xintercept=as.numeric(as.Date("2003-03-01"))) +
-#     geom_vline(xintercept=as.numeric(as.Date("1983-01-01")))        
-#         )
+print(myplot_line(subset(glb_trnobs_df, Symbol %in% c("CocaCola", "ProcterGamble")), 
+                  "Date.POSIX", "StockPrice", facet_row_colnames="Symbol") + 
+    geom_vline(xintercept=as.numeric(as.POSIXlt("2003-03-01"))) +
+    geom_vline(xintercept=as.numeric(as.POSIXlt("1983-01-01")))        
+        )
+print(myplot_line(subset(glb_trnobs_df, Date.POSIX > as.POSIXct("2004-01-01")), 
+                  "Date.POSIX", "StockPrice") +
+    geom_line(aes(color=Symbol)) + 
+    coord_cartesian(xlim=c(as.POSIXct("1990-01-01"),
+                           as.POSIXct("2000-01-01"))) +     
+    coord_cartesian(ylim=c(0, 250)) +     
+    geom_vline(xintercept=as.numeric(as.POSIXlt("1997-09-01"))) +
+    geom_vline(xintercept=as.numeric(as.POSIXlt("1997-11-01")))        
+        )
 # print(myplot_scatter(glb_allobs_df, "<col1_name>", "<col2_name>", smooth=TRUE))
 # print(myplot_scatter(glb_allobs_df, "<col1_name>", "<col2_name>", colorcol_name="<Pred.fctr>") + 
 #         geom_point(data=subset(glb_allobs_df, <condition>), 
@@ -1170,6 +1179,9 @@ glb_chunks_df <- myadd_chunk(glb_chunks_df, "extract.features", major.inc=TRUE)
 ```{r extract.features, cache=FALSE}
 #```{r extract_features, cache=FALSE, eval=!is.null(glb_txt_vars)}
 extract.features_chunk_df <- myadd_chunk(NULL, "extract.features_bgn")
+
+# Options:
+#   Select Tf, log(1 + Tf), Tf-IDF or BM25Tf-IDf
 
 # Create new features that help prediction
 # <col_name>.lag.2 <- lag(zoo(glb_trnobs_df$<col_name>), -2, na.pad=TRUE)
