@@ -789,6 +789,12 @@ dsp_numeric_feats_dstrb(feats_vctr=setdiff(names(glb_allobs_df),
 #    sort(tapply(glb_trnobs_df$<col1_name>, glb_trnobs_df$<col2_name>, min, na.rm=TRUE)))
 # print(<col1_name>_na_by_<col2_name>_arr <- 
 #    sort(tapply(glb_trnobs_df$<col1_name>.NA, glb_trnobs_df$<col2_name>, mean, na.rm=TRUE)))
+tmp_allobs_df <- dplyr::select(glb_allobs_df, -Date.zoo)
+symbol <- "GE"; print(symbol)
+symbol <- "CocaCola"; print(symbol)
+tapply(filter(tmp_allobs_df, Symbol == symbol)$StockPrice, 
+       filter(tmp_allobs_df, Symbol == symbol)$Date.month, mean) / 
+    mean(filter(tmp_allobs_df, Symbol == symbol)$StockPrice)
 
 # Other plots:
 # print(myplot_box(df=glb_trnobs_df, ycol_names="<col1_name>"))
